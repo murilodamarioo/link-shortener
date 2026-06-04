@@ -1,6 +1,6 @@
 import { InvalidSlugError, InvalidUrlError, SlugAlreadyTakenError } from '@/modules/url/domain/errors'
 
-import { ShortenUrlUseCase } from '../../shorten-url.use-case'
+import { ShortenUrlUseCase } from '../shorten-url.use-case'
 
 import { InMemoryUrlsRepository } from '@test/repositories/in-memory-urls-repository'
 

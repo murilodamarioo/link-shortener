@@ -1,10 +1,10 @@
 
 import { Inject, Injectable } from '@nestjs/common'
 
-import { InvalidSlugError, InvalidUrlError, SlugAlreadyTakenError } from '../domain/errors'
-import { IUrlsRepository, URLS_REPOSITORY } from '../domain/repositories/urls.repository.interface'
+import { InvalidSlugError, InvalidUrlError, SlugAlreadyTakenError } from '../../domain/errors'
+import { IUrlsRepository, URLS_REPOSITORY } from '../../domain/repositories/urls.repository.interface'
 
-import { Url } from '../domain/url.entity'
+import { Url } from '../../domain/url.entity'
 
 import { Either, failure, success } from '@/shared/core/either'
 
