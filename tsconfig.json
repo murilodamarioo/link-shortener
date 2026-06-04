@@ -13,6 +13,9 @@
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "@test/*": [
+        "test/*"
       ]
     },
     "incremental": true,
@@ -25,5 +28,9 @@
       "jest",
       "node"
     ]
-  }
+  },
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ]
 }
