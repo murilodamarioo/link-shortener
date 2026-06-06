@@ -1,11 +1,7 @@
 import { OriginalUrl } from './value-objects/original-url'
 import { Slug } from './value-objects/slug'
 
-import { InvalidUrlError } from './errors/invalid-url.error'
-import { InvalidSlugError } from './errors/invalid-slug.error'
-
 import { Entity } from '@/shared/core/entity'
-import { Either, failure, success } from '@/shared/core/either'
 import { UniqueEntityId } from '@/shared/core/unique-entity-id'
 
 export interface UrlProps {
@@ -18,11 +14,9 @@ export interface UrlProps {
 
 interface CreateUrlInput {
   originalUrl: string
-  customSlug?: string
+  customSlug: Slug
   expiresAt?: Date
 }
-
-type CreateUrlResult = Either<InvalidUrlError | InvalidSlugError, Url>
 
 export class Url extends Entity<UrlProps> {
 
@@ -63,32 +57,18 @@ export class Url extends Entity<UrlProps> {
     this.props.isActive = false
   }
 
-  public static create(input: CreateUrlInput, id?: UniqueEntityId): CreateUrlResult {
-    const originalUrlOrError = OriginalUrl.create(input.originalUrl)
-
-    if (originalUrlOrError.isFailure()) {
-      return failure(originalUrlOrError.value)
-    }
-
-    const slugOrError = input.customSlug
-      ? Slug.create(input.customSlug)
-      : Slug.generate()
-
-    if (slugOrError.isFailure()) {
-      return failure(slugOrError.value)
-    }
-
-    return success(
-      new Url(
-        {
-          originalUrl: originalUrlOrError.value,
-          slug: slugOrError.value,
-          isActive: true,
-          createdAt: new Date(),
-          expiresAt: input.expiresAt,
-        },
-        id
-      )
+  public static create(input: CreateUrlInput, id?: UniqueEntityId): Url {
+    const originalUrl = OriginalUrl.create(input.originalUrl)
+    
+    return new Url(
+      {
+        originalUrl: originalUrl,
+        slug: input.customSlug,
+        isActive: true,
+        createdAt: new Date(),
+        expiresAt: input.expiresAt,
+      },
+      id
     )
   }
 }

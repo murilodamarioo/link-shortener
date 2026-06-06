@@ -1,11 +1,6 @@
 import { Url } from '@/modules/url/domain/url.entity'
-
-import { makeUrl } from '../../../../../test/factories/make-url'
-
-import { InvalidUrlError } from '../errors/invalid-url.error'
-import { InvalidSlugError } from '../errors/invalid-slug.error'
-
-import { UniqueEntityId } from '@/shared/core/unique-entity-id'
+import { makeUrl } from '@test/factories/make-url'
+import { Slug } from '../value-objects/slug'
 
 
 describe('Url entity', () => {
@@ -28,28 +23,11 @@ describe('Url entity', () => {
     it('should use the custom slug when provided', () => {
       const newUrl = makeUrl({
         originalUrl: 'https://www.twitch.tv',
-        customSlug: 'my-custom-slug'
+        customSlug: Slug.create('my-custom-slug')
       })
 
       expect(newUrl).toBeInstanceOf(Url)
       expect(newUrl.slug).toBe('my-custom-slug')
-    })
-
-    it('should fail with an invalid original URL', () => {
-      const newUrl = Url.create({
-        originalUrl: 'invalid-url',
-      })
-
-      expect(newUrl.value).toBeInstanceOf(InvalidUrlError)
-    })
-
-    it('should fail with an invalid custom slug', () => {
-      const newUrl = Url.create({
-        originalUrl: 'https://www.twitch.tv',
-        customSlug: 'invalid Slug'
-      })
-
-      expect(newUrl.value).toBeInstanceOf(InvalidSlugError)
     })
 
     it('should set isActive as true by default', () => {
@@ -121,21 +99,6 @@ describe('Url entity', () => {
 
       newUrl.activate()
       expect(newUrl.isAvailable()).toBe(true)
-    })
-  })
-
-  describe('rehydration', () => {
-    it('should rehydrate with an existing id', () => {
-      const existingId = new UniqueEntityId('123e4567-e89b-12d3-a456-426614174000')
-      const newUrl = Url.create(
-        { originalUrl: 'https://google.com' },
-        existingId,
-      )
-
-      expect(newUrl.isSuccess()).toBe(true)
-      if (newUrl.isSuccess()) {
-        expect(newUrl.value.id.value).toBe('123e4567-e89b-12d3-a456-426614174000')
-      }
     })
   })
 

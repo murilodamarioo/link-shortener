@@ -7,6 +7,8 @@ import { IUrlsRepository, URLS_REPOSITORY } from '../../domain/repositories/urls
 import { Url } from '../../domain/url.entity'
 
 import { Either, failure, success } from '@/shared/core/either'
+import { Slug } from '../../domain/value-objects/slug'
+import { OriginalUrl } from '../../domain/value-objects/original-url'
 
 interface ShortenUrlRequest {
   originalUrl: string
@@ -29,22 +31,28 @@ export class ShortenUrlUseCase {
 
   async execute({ originalUrl, slug, expiresAt }: ShortenUrlRequest): Promise<ShortenUrlResponse> {
     if (slug) {
+      const invalidSlug = Slug.isValid(slug)
+
       const existingSlug = await this.urlsRepository.findBySlug(slug)
 
       if (existingSlug) {
         return failure(new SlugAlreadyTakenError(slug))
+      } else if (!invalidSlug) {
+        return failure(new InvalidSlugError(slug))
       }
     }
 
-    const url = Url.create({ originalUrl, customSlug: slug, expiresAt })
+    const customSlug = slug ? Slug.create(slug) : Slug.generate()
 
-    if (url.isFailure()) {
-      return failure(url.value)
+    if (!OriginalUrl.isValid(originalUrl)) {
+      return failure(new InvalidUrlError(originalUrl))
     }
 
-    await this.urlsRepository.save(url.value)
+    const url = Url.create({ originalUrl, customSlug, expiresAt })
 
-    return success({ url: url.value })
+    await this.urlsRepository.save(url)
+
+    return success({ url: url })
   }
 
 }
