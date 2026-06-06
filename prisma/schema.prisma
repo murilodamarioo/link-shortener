@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Url {
+  id          String   @id @default(uuid())
+  originalUrl String   @map("original_url")
+  slug        String
+  isActive    Boolean  @map("is_active")
+  createdAt   DateTime @map("created_at")
+  expiresAt   DateTime @map("expires_at")
+}

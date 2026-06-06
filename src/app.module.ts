@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config'
 
 import { envSchema } from './shared/env/env'
 import { EnvModule } from './shared/env/env.module'
+import { DatabaseModule } from './shared/database/database.module'
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { EnvModule } from './shared/env/env.module'
       isGlobal: true
     }),
     EnvModule,
+    DatabaseModule
   ],
   controllers: [],
   providers: [],
