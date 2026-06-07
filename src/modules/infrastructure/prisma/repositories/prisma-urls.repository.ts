@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common'
 
 import { IUrlsRepository } from '@/modules/url/domain/repositories/urls.repository.interface'
+import { Url } from '@/modules/url/domain/url.entity'
+
+import { PrismaUrlMapper } from '../mappera/prisma-url-mapper'
 
 import { PrismaService } from '@/shared/database/prisma.service'
-import { Url } from '@/modules/url/domain/url.entity'
-import { PrismaUrlMapper } from '../mappera/prisma-url-mapper'
+import { CacheRepository } from '@/shared/cache/cache.repository'
 
 @Injectable()
 export class PrismaUrlsRepository implements IUrlsRepository {
 
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private cache: CacheRepository
+  ) { }
 
   async findById(id: string): Promise<Url | null> {
     const url = await this.prisma.url.findUnique({
@@ -20,11 +25,24 @@ export class PrismaUrlsRepository implements IUrlsRepository {
   }
 
   async findBySlug(slug: string): Promise<Url | null> {
+    const cacheKey = `url:${slug}`
+    const cacheHit = await this.cache.get(cacheKey)
+
+    if (cacheHit) {
+      const cacheData = JSON.parse(cacheHit)
+
+      return cacheData
+    }
+
     const url = await this.prisma.url.findUnique({
       where: { slug }
     })
 
-    return url ? PrismaUrlMapper.toDomain(url) : null
+    if (!url) return null
+
+    await this.cache.set(cacheKey, JSON.stringify(url))
+
+    return PrismaUrlMapper.toDomain(url)
   }
 
   async findAll(): Promise<Url[]> {
