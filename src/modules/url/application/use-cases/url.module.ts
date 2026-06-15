@@ -12,12 +12,15 @@ import { URLS_REPOSITORY } from '../../domain/repositories/urls.repository.inter
 
 @Module({
   imports: [DatabaseModule, CacheModule],
-  controllers: [],
   providers: [
     {
       provide: URLS_REPOSITORY,
       useClass: PrismaUrlsRepository
     },
+    RedirectUrlUseCase,
+    ShortenUrlUseCase
+  ],
+  exports: [
     RedirectUrlUseCase,
     ShortenUrlUseCase
   ]

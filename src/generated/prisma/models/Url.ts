@@ -159,7 +159,7 @@ export type UrlGroupByOutputType = {
   slug: string
   isActive: boolean
   createdAt: Date
-  expiresAt: Date
+  expiresAt: Date | null
   _count: UrlCountAggregateOutputType | null
   _min: UrlMinAggregateOutputType | null
   _max: UrlMaxAggregateOutputType | null
@@ -189,7 +189,7 @@ export type UrlWhereInput = {
   slug?: Prisma.StringFilter<"Url"> | string
   isActive?: Prisma.BoolFilter<"Url"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Url"> | Date | string
-  expiresAt?: Prisma.DateTimeFilter<"Url"> | Date | string
+  expiresAt?: Prisma.DateTimeNullableFilter<"Url"> | Date | string | null
 }
 
 export type UrlOrderByWithRelationInput = {
@@ -198,7 +198,7 @@ export type UrlOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  expiresAt?: Prisma.SortOrder
+  expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
 export type UrlWhereUniqueInput = Prisma.AtLeast<{
@@ -210,7 +210,7 @@ export type UrlWhereUniqueInput = Prisma.AtLeast<{
   originalUrl?: Prisma.StringFilter<"Url"> | string
   isActive?: Prisma.BoolFilter<"Url"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Url"> | Date | string
-  expiresAt?: Prisma.DateTimeFilter<"Url"> | Date | string
+  expiresAt?: Prisma.DateTimeNullableFilter<"Url"> | Date | string | null
 }, "id" | "slug">
 
 export type UrlOrderByWithAggregationInput = {
@@ -219,7 +219,7 @@ export type UrlOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  expiresAt?: Prisma.SortOrder
+  expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UrlCountOrderByAggregateInput
   _max?: Prisma.UrlMaxOrderByAggregateInput
   _min?: Prisma.UrlMinOrderByAggregateInput
@@ -234,7 +234,7 @@ export type UrlScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"Url"> | string
   isActive?: Prisma.BoolWithAggregatesFilter<"Url"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Url"> | Date | string
-  expiresAt?: Prisma.DateTimeWithAggregatesFilter<"Url"> | Date | string
+  expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Url"> | Date | string | null
 }
 
 export type UrlCreateInput = {
@@ -243,7 +243,7 @@ export type UrlCreateInput = {
   slug: string
   isActive: boolean
   createdAt: Date | string
-  expiresAt: Date | string
+  expiresAt?: Date | string | null
 }
 
 export type UrlUncheckedCreateInput = {
@@ -252,7 +252,7 @@ export type UrlUncheckedCreateInput = {
   slug: string
   isActive: boolean
   createdAt: Date | string
-  expiresAt: Date | string
+  expiresAt?: Date | string | null
 }
 
 export type UrlUpdateInput = {
@@ -261,7 +261,7 @@ export type UrlUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UrlUncheckedUpdateInput = {
@@ -270,7 +270,7 @@ export type UrlUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UrlCreateManyInput = {
@@ -279,7 +279,7 @@ export type UrlCreateManyInput = {
   slug: string
   isActive: boolean
   createdAt: Date | string
-  expiresAt: Date | string
+  expiresAt?: Date | string | null
 }
 
 export type UrlUpdateManyMutationInput = {
@@ -288,7 +288,7 @@ export type UrlUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UrlUncheckedUpdateManyInput = {
@@ -297,7 +297,7 @@ export type UrlUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UrlCountOrderByAggregateInput = {
@@ -337,6 +337,10 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 
@@ -388,8 +392,8 @@ export type $UrlPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     slug: string
     isActive: boolean
     createdAt: Date
-    expiresAt: Date
-  }, ExtArgs["result"]["url"]>
+    expiresAt: Date | null
+   }, ExtArgs["result"]["url"]>
   composites: {}
 }
 

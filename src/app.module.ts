@@ -3,7 +3,9 @@ import { ConfigModule } from '@nestjs/config'
 
 import { envSchema } from './shared/env/env'
 import { EnvModule } from './shared/env/env.module'
+
 import { UrlModule } from './modules/url/application/use-cases/url.module'
+import { HttpModule } from './modules/infrastructure/http/http.module'
 
 @Module({
   imports: [
@@ -12,7 +14,8 @@ import { UrlModule } from './modules/url/application/use-cases/url.module'
       isGlobal: true
     }),
     EnvModule,
-    UrlModule
+    UrlModule,
+    HttpModule
   ],
   controllers: [],
   providers: [],

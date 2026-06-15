@@ -9,7 +9,7 @@ export interface UrlProps {
   slug: Slug
   isActive: boolean
   createdAt: Date
-  expiresAt?: Date
+  expiresAt?: Date | null
 }
 
 interface CreateUrlInput {
@@ -36,7 +36,7 @@ export class Url extends Entity<UrlProps> {
     return this.props.createdAt
   }
 
-  get expiresAt(): Date | undefined {
+  get expiresAt(): Date | undefined | null {
     return this.props.expiresAt
   }
 
@@ -59,7 +59,7 @@ export class Url extends Entity<UrlProps> {
 
   public static create(input: CreateUrlInput, id?: UniqueEntityId): Url {
     const originalUrl = OriginalUrl.create(input.originalUrl)
-    
+
     return new Url(
       {
         originalUrl: originalUrl,

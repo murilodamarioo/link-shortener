@@ -10,12 +10,12 @@ generator client {
 }
 
 model Url {
-  id          String   @id @default(uuid())
-  originalUrl String   @map("original_url")
-  slug        String   @unique
-  isActive    Boolean  @map("is_active")
-  createdAt   DateTime @map("created_at")
-  expiresAt   DateTime @map("expires_at")
+  id          String    @id @default(uuid())
+  originalUrl String    @map("original_url")
+  slug        String    @unique
+  isActive    Boolean   @map("is_active")
+  createdAt   DateTime  @map("created_at")
+  expiresAt   DateTime? @map("expires_at")
 
   @@map("urls")
 }

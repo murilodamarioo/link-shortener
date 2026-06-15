@@ -9,7 +9,7 @@ export class PrismaUrlMapper {
     return Url.create({
       originalUrl: raw.originalUrl,
       customSlug: Slug.create(raw.slug),
-      expiresAt: raw.expiresAt
+      expiresAt: raw.expiresAt ?? undefined
     })
   }
 
@@ -20,8 +20,8 @@ export class PrismaUrlMapper {
       slug: url.slug,
       isActive: url.isActive,
       createdAt: url.createdAt,
-      expiresAt: url.expiresAt!
-    } 
+      expiresAt: url.expiresAt
+    }
   }
 
 }
