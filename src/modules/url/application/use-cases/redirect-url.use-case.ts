@@ -23,6 +23,7 @@ export class RedirectUrlUseCase {
   ) { }
 
   async execute({ slug }: RedirectUrlRequest): Promise<RedirectUrlResponse> {
+
     const url = await this.urlsRepository.findBySlug(slug)
 
     if (!url) {

@@ -85,19 +85,19 @@ Na Fase 2 foi definida a interface `IUrlRepository` no domínio. Agora precisamo
 O redirect (RF2) é a operação mais executada do sistema — pode receber milhares de requisições por minuto para os mesmos slugs. Buscar no banco a cada request seria ineficiente. O Redis será usado como cache com TTL configurável via `.env` (já declarado na Fase 1 como `REDIS_TTL_SECONDS`).
 
 ### Acceptance Criteria
-- [ ] Pacote `ioredis` instalado
-- [ ] `RedisService` criado em `src/shared/cache/redis.service.ts` com os métodos:
+- [x] Pacote `ioredis` instalado
+- [x] `RedisService` criado em `src/shared/cache/redis.service.ts` com os métodos:
   - `get(key: string): Promise<string | null>`
   - `set(key: string, value: string, ttlSeconds: number): Promise<void>`
   - `del(key: string): Promise<void>`
-- [ ] `CacheModule` criado em `src/shared/cache/cache.module.ts` exportando o `RedisService` como global
-- [ ] O `RedirectUrlUseCase` atualizado para:
+- [x] `CacheModule` criado em `src/shared/cache/cache.module.ts` exportando o `RedisService` como global
+- [x] O `RedirectUrlUseCase` atualizado para:
   1. Verificar o cache antes de consultar o banco
   2. Popular o cache após encontrar no banco
   3. Usar a chave no formato `redirect:{slug}`
-- [ ] O `ShortenUrlUseCase` **não** interage com o cache (apenas persiste)
-- [ ] Quando uma URL é deletada ou desativada, o cache da chave correspondente deve ser invalidado
-- [ ] `REDIS_HOST`, `REDIS_PORT` e `REDIS_TTL_SECONDS` consumidos via `ConfigService`
+- [x] O `ShortenUrlUseCase` **não** interage com o cache (apenas persiste)
+- [x] Quando uma URL é deletada ou desativada, o cache da chave correspondente deve ser invalidado
+- [x] `REDIS_HOST`, `REDIS_PORT` e `REDIS_TTL_SECONDS` consumidos via `ConfigService`
 
 ### Technical Notes
 - O `RedisService` deve fechar a conexão no `onModuleDestroy` para não deixar conexões abertas em testes
@@ -120,15 +120,15 @@ O redirect (RF2) é a operação mais executada do sistema — pode receber milh
 Até agora os use cases foram testados com repositórios in-memory. Agora precisamos conectar as peças reais: o `PrismaUrlRepository` como implementação de `IUrlRepository`, os use cases como providers injetáveis e o módulo organizado conforme Clean Architecture.
 
 ### Acceptance Criteria
-- [ ] Arquivo criado em `src/modules/url/url.module.ts`
-- [ ] `PrismaUrlRepository` registrado com o token `URL_REPOSITORY`:
+- [x] Arquivo criado em `src/modules/url/url.module.ts`
+- [x] `PrismaUrlRepository` registrado com o token `URL_REPOSITORY`:
   ```
   { provide: URL_REPOSITORY, useClass: PrismaUrlRepository }
   ```
-- [ ] `ShortenUrlUseCase` e `RedirectUrlUseCase` registrados como providers
-- [ ] O módulo importa `DatabaseModule` e `CacheModule`
-- [ ] `app.module.ts` importa o `UrlModule`
-- [ ] Aplicação sobe sem erros com `npm run start:dev`
+- [x] `ShortenUrlUseCase` e `RedirectUrlUseCase` registrados como providers
+- [x] O módulo importa `DatabaseModule` e `CacheModule`
+- [x] `app.module.ts` importa o `UrlModule`
+- [x] Aplicação sobe sem erros com `npm run start:dev`
 
 ### Technical Notes
 - Não exportar o `PrismaUrlRepository` diretamente — quem precisar do repositório deve depender da interface via token
@@ -150,12 +150,12 @@ Até agora os use cases foram testados com repositórios in-memory. Agora precis
 Com domínio, infraestrutura e módulo montados, a camada de apresentação é o último passo. O controller é responsável apenas por receber a requisição, chamar o use case e mapear o resultado para a resposta HTTP correta — nenhuma regra de negócio deve existir aqui.
 
 ### Acceptance Criteria
-- [ ] `ShortenUrlDto` criado com validações via `class-validator`:
+- [x] `ShortenUrlDto` criado com validações via `class-validator`:
   - `originalUrl` — string, IsUrl, obrigatório
   - `customSlug` — string, IsOptional, MinLength(3), MaxLength(50)
   - `expiresAt` — Date, IsOptional, IsDateString
-- [ ] `UrlController` criado em `src/modules/url/presentation/controllers/url.controller.ts`
-- [ ] Endpoint `POST /urls`:
+- [x] `UrlController` criado em `src/modules/url/presentation/controllers/url.controller.ts`
+- [x] Endpoint `POST /urls`:
   - Chama `ShortenUrlUseCase`
   - Retorna `201 Created` com `{ id, originalUrl, slug, shortUrl, expiresAt, createdAt }`
   - `shortUrl` = `APP_BASE_URL + '/' + slug`

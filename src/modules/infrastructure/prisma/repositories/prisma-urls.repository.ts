@@ -31,7 +31,7 @@ export class PrismaUrlsRepository implements IUrlsRepository {
     if (cacheHit) {
       const cacheData = JSON.parse(cacheHit)
 
-      return cacheData
+      return PrismaUrlMapper.toDomain(cacheData)
     }
 
     const url = await this.prisma.url.findUnique({
@@ -64,12 +64,24 @@ export class PrismaUrlsRepository implements IUrlsRepository {
       where: { id: data.id },
       data
     })
+
+    const cacheKey = `url:${url.slug}`
+    await this.cache.delete(cacheKey)
   }
 
   async delete(id: string): Promise<void> {
+    const url = await this.prisma.url.findUnique({
+      where: { id }
+    })
+
     await this.prisma.url.delete({
       where: { id }
     })
+
+    if (url) {
+      const cacheKey = `url:${url.slug}`
+      await this.cache.delete(cacheKey)
+    }
   }
 
 }
